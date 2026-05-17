@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: dunedin-lawn-clean
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: .
+    autoDeployTrigger: commit

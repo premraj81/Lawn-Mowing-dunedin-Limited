@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dunedin Lawn & Clean | Cheap Lawn Mowing, Cleaning, and Subscriptions</title>
+    <meta
+      name="description"
+      content="Affordable Dunedin lawn mowing, gardening, outdoor cleaning, and subscription plans with online quote, booking calendar, and payment checkout."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header" id="top">
+      <a class="brand" href="#top" aria-label="Dunedin Lawn and Clean home">
+        <span class="brand-mark">DL</span>
+        <span>
+          <strong>Dunedin Lawn & Clean</strong>
+          <small>Cheap, tidy, local</small>
+        </span>
+      </a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#services">Services</a>
+        <a href="#quote">Quote</a>
+        <a href="#plans">Plans</a>
+        <a href="#booking">Booking</a>
+        <a href="#payment">Pay</a>
+      </nav>
+      <a class="nav-cta" href="#booking">Book now</a>
+    </header>
+
+    <main>
+      <section class="hero" aria-label="Affordable lawn mowing in Dunedin">
+        <img src="assets/dunedin-lawn-hero.png" alt="Freshly cut residential lawn with tidy path and garden" />
+        <div class="hero-shade"></div>
+        <div class="hero-content">
+          <p class="eyebrow">Dunedin lawn mowing, garden tidy-ups, and cleaning</p>
+          <h1>Very cheap quotes for lawns that look properly looked after.</h1>
+          <p class="hero-copy">
+            Book once, choose a regular subscription, or build a custom clean-up package for lawns, edges,
+            green waste, outdoor surfaces, and move-out tidy jobs.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#quote">Get instant quote</a>
+            <a class="button secondary" href="#booking">Pick a date</a>
+          </div>
+          <div class="trust-row" aria-label="Service highlights">
+            <span>From $25</span>
+            <span>Student & pensioner friendly</span>
+            <span>Dunedin wide</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="service-band" id="services">
+        <div class="section-heading">
+          <p class="eyebrow">All sorts of yard and cleaning work</p>
+          <h2>Choose only what you need.</h2>
+        </div>
+        <div class="service-grid">
+          <article class="service-card">
+            <span class="service-icon">Mow</span>
+            <h3>Lawn mowing</h3>
+            <p>Small, medium, large, and overgrown lawns with tidy stripe finish where possible.</p>
+            <strong>From $25</strong>
+          </article>
+          <article class="service-card">
+            <span class="service-icon">Edge</span>
+            <h3>Edges and trimming</h3>
+            <p>Footpaths, fences, driveways, garden borders, and quick weed trimming.</p>
+            <strong>From $15</strong>
+          </article>
+          <article class="service-card">
+            <span class="service-icon">Clean</span>
+            <h3>Outdoor cleaning</h3>
+            <p>Paths, patios, bins, decks, and quick outside tidy-ups before inspections.</p>
+            <strong>From $35</strong>
+          </article>
+          <article class="service-card">
+            <span class="service-icon">Waste</span>
+            <h3>Green waste removal</h3>
+            <p>Clippings, branches, leaves, and garden rubbish taken away after the job.</p>
+            <strong>From $20</strong>
+          </article>
+          <article class="service-card">
+            <span class="service-icon">Garden</span>
+            <h3>Garden tidy</h3>
+            <p>Weeding, leaf clearing, pruning small shrubs, and making the section presentable.</p>
+            <strong>From $45</strong>
+          </article>
+          <article class="service-card">
+            <span class="service-icon">Move</span>
+            <h3>Move-out clean-up</h3>
+            <p>Quick lawn and outside clean for tenants, landlords, and property managers.</p>
+            <strong>From $79</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="quote-layout" id="quote">
+        <div class="quote-copy">
+          <p class="eyebrow">Cheap quote calculator</p>
+          <h2>Build a price before you book.</h2>
+          <p>
+            Select the lawn size, extras, and frequency. The total updates instantly, so customers can see
+            a clear price before sending a booking request.
+          </p>
+          <ul class="check-list">
+            <li>No hidden call-out fee inside Dunedin city.</li>
+            <li>Regular customers get cheaper repeat visits.</li>
+            <li>Final price can be confirmed after seeing photos or the address.</li>
+          </ul>
+        </div>
+        <form class="quote-tool" id="quoteForm">
+          <label>
+            Lawn size
+            <select id="lawnSize">
+              <option value="25">Small section - $25</option>
+              <option value="40">Medium section - $40</option>
+              <option value="60">Large section - $60</option>
+              <option value="95">Overgrown / heavy job - $95</option>
+            </select>
+          </label>
+          <fieldset>
+            <legend>Add services</legend>
+            <label><input type="checkbox" value="15" data-label="Edges and trimming" /> Edges and trimming</label>
+            <label><input type="checkbox" value="20" data-label="Green waste removal" /> Green waste removal</label>
+            <label><input type="checkbox" value="35" data-label="Outdoor cleaning" /> Outdoor cleaning</label>
+            <label><input type="checkbox" value="45" data-label="Garden tidy" /> Garden tidy</label>
+          </fieldset>
+          <label>
+            Visit frequency
+            <select id="frequency">
+              <option value="1">One-off visit</option>
+              <option value="0.9">Every 4 weeks - save 10%</option>
+              <option value="0.85">Fortnightly - save 15%</option>
+              <option value="0.8">Weekly - save 20%</option>
+            </select>
+          </label>
+          <div class="quote-total" aria-live="polite">
+            <span>Estimated price</span>
+            <strong id="quoteTotal">$25</strong>
+            <small id="quoteSummary">Small section, one-off visit</small>
+          </div>
+        </form>
+      </section>
+
+      <section class="plans-band" id="plans">
+        <div class="section-heading">
+          <p class="eyebrow">Subscription plans</p>
+          <h2>Keep it cheap by staying regular.</h2>
+        </div>
+        <div class="plan-grid">
+          <article class="plan-card">
+            <h3>Basic Mow</h3>
+            <p class="price">$32<span>/visit</span></p>
+            <p>For small to medium lawns that just need reliable mowing.</p>
+            <button class="select-plan" data-plan="Basic Mow" data-price="32">Choose plan</button>
+          </article>
+          <article class="plan-card featured">
+            <p class="tag">Best value</p>
+            <h3>Tidy Yard</h3>
+            <p class="price">$49<span>/visit</span></p>
+            <p>Mowing, edges, quick sweep, and green waste bagging.</p>
+            <button class="select-plan" data-plan="Tidy Yard" data-price="49">Choose plan</button>
+          </article>
+          <article class="plan-card">
+            <h3>Clean & Green</h3>
+            <p class="price">$79<span>/visit</span></p>
+            <p>Lawns, edges, garden tidy, and outdoor path or patio clean.</p>
+            <button class="select-plan" data-plan="Clean & Green" data-price="79">Choose plan</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="booking-layout" id="booking">
+        <div class="booking-panel">
+          <p class="eyebrow">Online booking</p>
+          <h2>Pick a date and time.</h2>
+          <div class="calendar-head">
+            <button type="button" id="prevMonth" aria-label="Previous month">&lt;</button>
+            <strong id="calendarTitle"></strong>
+            <button type="button" id="nextMonth" aria-label="Next month">&gt;</button>
+          </div>
+          <div class="calendar-weekdays" aria-hidden="true">
+            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+          </div>
+          <div class="calendar-grid" id="calendarGrid" aria-label="Booking date calendar"></div>
+        </div>
+        <form class="booking-form" id="bookingForm">
+          <label>
+            Selected date
+            <input id="selectedDate" name="selectedDate" readonly placeholder="Choose a date from the calendar" />
+          </label>
+          <label>
+            Time
+            <select id="selectedTime" name="selectedTime">
+              <option>8:00 AM</option>
+              <option>10:00 AM</option>
+              <option>12:30 PM</option>
+              <option>2:30 PM</option>
+              <option>4:30 PM</option>
+            </select>
+          </label>
+          <label>
+            Name
+            <input name="customerName" autocomplete="name" placeholder="Your name" />
+          </label>
+          <label>
+            Address
+            <input name="address" autocomplete="street-address" placeholder="Dunedin address" />
+          </label>
+          <label>
+            Notes
+            <textarea name="notes" rows="4" placeholder="Gate access, lawn condition, pets, extras..."></textarea>
+          </label>
+          <button class="button primary full" type="submit">Save booking details</button>
+          <p class="form-note" id="bookingStatus" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="payment-layout" id="payment">
+        <div>
+          <p class="eyebrow">Online payment system</p>
+          <h2>Checkout preview for deposits or subscriptions.</h2>
+          <p>
+            This front-end payment form is designed for a real processor such as Stripe, Windcave, or PayPal.
+            It does not charge cards yet, but the structure is ready for backend integration.
+          </p>
+        </div>
+        <form class="payment-card" id="paymentForm">
+          <label>
+            Payment type
+            <select id="paymentType">
+              <option value="20">Booking deposit - $20</option>
+              <option value="32">Basic Mow subscription - $32</option>
+              <option value="49">First Tidy Yard visit - $49</option>
+              <option value="79">Clean & Green visit - $79</option>
+              <option value="120">Custom invoice - $120</option>
+            </select>
+          </label>
+          <label>
+            Card number
+            <input inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" maxlength="19" />
+          </label>
+          <div class="split-fields">
+            <label>
+              Expiry
+              <input inputmode="numeric" autocomplete="cc-exp" placeholder="MM / YY" maxlength="7" />
+            </label>
+            <label>
+              CVC
+              <input inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4" />
+            </label>
+          </div>
+          <button class="button primary full" type="submit" id="payButton">Pay $20 securely</button>
+          <p class="form-note" id="paymentStatus" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <strong>Dunedin Lawn & Clean</strong>
+      <span>Affordable mowing, cleaning, subscriptions, booking, and payment-ready checkout.</span>
+      <a href="#top">Back to top</a>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
