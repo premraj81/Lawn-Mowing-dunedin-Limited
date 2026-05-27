@@ -12,7 +12,11 @@ const quoteTotal = document.querySelector("#quoteTotal");
 const quoteSummary = document.querySelector("#quoteSummary");
 const bookingNotes = document.querySelector("#bookingNotes");
 const addressInput = document.querySelector("#addressInput");
+const showMap = document.querySelector("#showMap");
 const openMaps = document.querySelector("#openMaps");
+const mapPreview = document.querySelector("#mapPreview");
+const mapFrame = document.querySelector("#mapFrame");
+const mapStatus = document.querySelector("#mapStatus");
 const lawnPhoto = document.querySelector("#lawnPhoto");
 const estimatorCanvas = document.querySelector("#estimatorCanvas");
 const clearDrawing = document.querySelector("#clearDrawing");
@@ -62,16 +66,38 @@ function updateQuote() {
 quoteForm.addEventListener("input", updateQuote);
 updateQuote();
 
-openMaps.addEventListener("click", () => {
+function propertyMapQuery() {
   const address = addressInput.value.trim();
 
   if (!address) {
-    document.querySelector("#bookingStatus").textContent = "Please type the property address first.";
+    mapStatus.textContent = "Please type the property address first.";
     addressInput.focus();
+    return "";
+  }
+
+  return /dunedin/i.test(address) ? address : `${address}, Dunedin, New Zealand`;
+}
+
+showMap.addEventListener("click", () => {
+  const query = propertyMapQuery();
+
+  if (!query) {
     return;
   }
 
-  const query = /dunedin/i.test(address) ? address : `${address}, Dunedin, New Zealand`;
+  mapFrame.src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=20&t=k&output=embed`;
+  mapPreview.classList.add("has-map");
+  mapStatus.textContent =
+    "Close Google Maps view loaded. Screenshot this map or take a property photo, then upload it in the lawn size estimator and draw the mowing boundaries.";
+});
+
+openMaps.addEventListener("click", () => {
+  const query = propertyMapQuery();
+
+  if (!query) {
+    return;
+  }
+
   window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`, "_blank", "noopener");
 });
 

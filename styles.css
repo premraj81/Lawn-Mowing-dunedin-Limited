@@ -521,6 +521,43 @@ textarea:focus {
   gap: 10px;
 }
 
+.map-preview {
+  position: relative;
+  overflow: hidden;
+  min-height: 300px;
+  margin-bottom: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #eef4e9;
+}
+
+.map-preview iframe {
+  display: none;
+  width: 100%;
+  height: 360px;
+  border: 0;
+}
+
+.map-preview.has-map iframe {
+  display: block;
+}
+
+.map-preview p {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 18px;
+  color: var(--muted);
+  text-align: center;
+  font-weight: 800;
+}
+
+.map-preview.has-map p {
+  display: none;
+}
+
 .section-total {
   display: flex;
   align-items: center;

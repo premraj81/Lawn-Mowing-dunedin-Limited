@@ -195,8 +195,8 @@
               <p class="eyebrow">Lawn size estimator</p>
               <h3>Upload or take a photo, then draw the lawn area.</h3>
               <p>
-                If you do not know the lawn size, use this estimator. Draw over the area that needs service,
-                then use the rough m2 estimate in the quote calculator.
+                If you do not know the lawn size, use this estimator. Upload a property photo or a Google Maps
+                screenshot, then draw the lawn mowing boundaries and use the rough m2 estimate in the quote calculator.
               </p>
             </div>
             <label class="file-picker">
@@ -290,9 +290,20 @@
             <input id="addressInput" name="address" autocomplete="street-address" placeholder="Dunedin address" />
           </label>
           <div class="address-actions">
+            <button class="button primary full" type="button" id="showMap">Show close property map</button>
             <button class="button secondary full" type="button" id="openMaps">Open address in Google Maps</button>
-            <small class="field-help">Type the property address, then open it in Google Maps to check the location.</small>
+            <small class="field-help">Type the property address, then zoom to the property. Screenshot the map or take a photo and upload it to the lawn size estimator to draw boundaries.</small>
           </div>
+          <div class="map-preview" id="mapPreview">
+            <iframe
+              id="mapFrame"
+              title="Google Maps property preview"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+            <p id="mapPlaceholder">Enter an address and show the close property map.</p>
+          </div>
+          <p class="form-note" id="mapStatus" aria-live="polite"></p>
           <label>
             Notes
             <textarea
@@ -315,6 +326,6 @@
       <a href="#top">Back to top</a>
     </footer>
 
-    <script src="app.js?v=20260528-section-estimator"></script>
+    <script src="app.js?v=20260528-google-map-preview"></script>
   </body>
 </html>
