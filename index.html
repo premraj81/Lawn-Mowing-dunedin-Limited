@@ -200,8 +200,8 @@
               </p>
             </div>
             <label class="file-picker">
-              Photo of lawn
-              <input id="lawnPhoto" type="file" accept="image/*" capture="environment" />
+              Photo of lawn section
+              <input id="lawnPhoto" type="file" accept="image/*" capture="environment" multiple />
             </label>
             <div class="canvas-wrap">
               <canvas id="estimatorCanvas" width="720" height="420" aria-label="Draw the lawn area on the uploaded photo"></canvas>
@@ -209,8 +209,14 @@
             </div>
             <div class="estimator-actions">
               <button type="button" class="button secondary" id="clearDrawing">Clear drawing</button>
-              <button type="button" class="button primary" id="useEstimate">Use estimated m2</button>
+              <button type="button" class="button secondary" id="addSection">Add section to total</button>
+              <button type="button" class="button primary" id="applyEstimate">Apply total for quote</button>
             </div>
+            <div class="section-total" aria-live="polite">
+              <span>Total selected lawn area</span>
+              <strong id="sectionTotal">0 m2</strong>
+            </div>
+            <ul class="section-list" id="sectionList"></ul>
             <p class="form-note" id="estimatorStatus" aria-live="polite">
               Drawn area estimate will appear here. It is only a rough guide.
             </p>
@@ -309,6 +315,6 @@
       <a href="#top">Back to top</a>
     </footer>
 
-    <script src="app.js?v=20260528-photo-map-estimator"></script>
+    <script src="app.js?v=20260528-section-estimator"></script>
   </body>
 </html>

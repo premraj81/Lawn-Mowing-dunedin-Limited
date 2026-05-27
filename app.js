@@ -16,9 +16,12 @@ const openMaps = document.querySelector("#openMaps");
 const lawnPhoto = document.querySelector("#lawnPhoto");
 const estimatorCanvas = document.querySelector("#estimatorCanvas");
 const clearDrawing = document.querySelector("#clearDrawing");
-const useEstimate = document.querySelector("#useEstimate");
+const addSection = document.querySelector("#addSection");
+const applyEstimate = document.querySelector("#applyEstimate");
 const estimatorStatus = document.querySelector("#estimatorStatus");
 const canvasWrap = document.querySelector(".canvas-wrap");
+const sectionTotal = document.querySelector("#sectionTotal");
+const sectionList = document.querySelector("#sectionList");
 
 function getLawnEstimate(area) {
   if (area <= 40) {
@@ -78,6 +81,8 @@ const estimator = {
   image: null,
   drawing: false,
   estimate: 0,
+  sections: [],
+  currentPhoto: "",
 };
 
 estimator.mask.width = estimatorCanvas.width;
@@ -89,7 +94,7 @@ estimator.maskCtx.strokeStyle = "#000";
 estimator.maskCtx.lineWidth = 34;
 estimator.ctx.lineCap = "round";
 estimator.ctx.lineJoin = "round";
-estimator.ctx.strokeStyle = "rgba(29, 123, 69, 0.68)";
+estimator.ctx.strokeStyle = "rgba(217, 240, 120, 0.36)";
 estimator.ctx.lineWidth = 34;
 
 function canvasPoint(event) {
@@ -140,6 +145,22 @@ function updateEstimatorStatus() {
   estimatorStatus.textContent = `Rough selected lawn area: about ${estimator.estimate} m2. Use this only as a guide.`;
 }
 
+function estimatorTotal() {
+  return estimator.sections.reduce((sum, section) => sum + section.size, 0);
+}
+
+function renderSections() {
+  const total = estimatorTotal();
+  sectionTotal.textContent = `${total} m2`;
+  sectionList.innerHTML = "";
+
+  estimator.sections.forEach((section, index) => {
+    const item = document.createElement("li");
+    item.innerHTML = `<span>Section ${index + 1}: ${section.photo}</span><strong>${section.size} m2</strong>`;
+    sectionList.append(item);
+  });
+}
+
 lawnPhoto.addEventListener("change", () => {
   const file = lawnPhoto.files[0];
 
@@ -150,10 +171,12 @@ lawnPhoto.addEventListener("change", () => {
   const image = new Image();
   image.onload = () => {
     estimator.image = image;
+    estimator.currentPhoto = file.name || `photo ${estimator.sections.length + 1}`;
     estimator.maskCtx.clearRect(0, 0, estimator.mask.width, estimator.mask.height);
+    estimator.estimate = 0;
     drawPhoto();
     canvasWrap.classList.add("has-photo");
-    estimatorStatus.textContent = "Draw over the lawn area that needs service.";
+    estimatorStatus.textContent = "Draw over this lawn section, then add it to the total. You can upload another photo for the next section.";
   };
   image.src = URL.createObjectURL(file);
 });
@@ -203,15 +226,39 @@ clearDrawing.addEventListener("click", () => {
     : "Upload or take a lawn photo to start drawing.";
 });
 
-useEstimate.addEventListener("click", () => {
+addSection.addEventListener("click", () => {
   if (!estimator.estimate) {
-    estimatorStatus.textContent = "Draw over the lawn area first, then use the estimate.";
+    estimatorStatus.textContent = "Draw over the lawn section first, then add it to the total.";
     return;
   }
 
-  lawnArea.value = estimator.estimate;
+  estimator.sections.push({
+    photo: estimator.currentPhoto || `photo ${estimator.sections.length + 1}`,
+    size: estimator.estimate,
+  });
+  renderSections();
+  estimator.maskCtx.clearRect(0, 0, estimator.mask.width, estimator.mask.height);
+  drawPhoto();
+  estimator.estimate = 0;
+  estimatorStatus.textContent = "Section added. Upload or take another photo, draw another section, or apply the total for quote.";
+});
+
+applyEstimate.addEventListener("click", () => {
+  const total = estimatorTotal();
+
+  if (!total) {
+    estimatorStatus.textContent = "Add at least one drawn section before applying the total.";
+    return;
+  }
+
+  lawnArea.value = total;
   updateQuote();
-  estimatorStatus.textContent = `Using about ${estimator.estimate} m2 in the quote calculator.`;
+  const sectionSummary = estimator.sections
+    .map((section, index) => `Section ${index + 1}: ${section.size} m2 from ${section.photo}`)
+    .join("; ");
+  bookingNotes.value = `Photo lawn estimator total: about ${total} m2. ${sectionSummary}. Exact price confirmed after looking at the property and photos.`;
+  estimatorStatus.textContent = `Using about ${total} m2 total in the quote calculator and booking notes.`;
+  document.querySelector("#booking").scrollIntoView({ behavior: "smooth" });
 });
 
 document.querySelectorAll(".select-plan").forEach((button) => {
