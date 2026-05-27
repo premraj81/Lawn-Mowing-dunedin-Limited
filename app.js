@@ -6,6 +6,7 @@ const money = new Intl.NumberFormat("en-NZ", {
 
 const quoteForm = document.querySelector("#quoteForm");
 const lawnArea = document.querySelector("#lawnArea");
+const accessLevel = document.querySelector("#accessLevel");
 const frequency = document.querySelector("#frequency");
 const quoteTotal = document.querySelector("#quoteTotal");
 const quoteSummary = document.querySelector("#quoteSummary");
@@ -32,15 +33,17 @@ function updateQuote() {
   const area = Math.max(1, Number(lawnArea.value) || 1);
   const lawnEstimate = getLawnEstimate(area);
   const base = lawnEstimate.price;
+  const accessPrice = Number(accessLevel.value);
+  const accessText = accessLevel.options[accessLevel.selectedIndex].dataset.label;
   const extras = [...quoteForm.querySelectorAll("input[type='checkbox']:checked")];
   const extrasTotal = extras.reduce((sum, item) => sum + Number(item.value), 0);
   const multiplier = Number(frequency.value);
-  const total = Math.round((base + extrasTotal) * multiplier);
+  const total = Math.round((base + accessPrice + extrasTotal) * multiplier);
   const selectedExtras = extras.map((item) => item.dataset.label).join(", ");
   const frequencyText = frequency.options[frequency.selectedIndex].text.replace(/ - .*/, "");
 
   quoteTotal.textContent = money.format(total);
-  quoteSummary.textContent = `${area} m2 ${lawnEstimate.label}, ${frequencyText}${
+  quoteSummary.textContent = `${area} m2 ${lawnEstimate.label}, ${accessText}, ${frequencyText}${
     selectedExtras ? `, plus ${selectedExtras}` : ""
   } - estimate only`;
 }

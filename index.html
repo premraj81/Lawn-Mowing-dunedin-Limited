@@ -137,6 +137,15 @@
             </span>
             <small class="field-help">Calculator guide: up to 40 m2 small, 41-80 m2 medium, 81-120 m2 large.</small>
           </label>
+          <label>
+            Access / slope
+            <select id="accessLevel">
+              <option value="0" data-label="flat access">Flat - no extra</option>
+              <option value="15" data-label="slight steep access">Slight steep - +$15</option>
+              <option value="30" data-label="medium steep access">Medium steep - +$30</option>
+              <option value="50" data-label="very steep access">Very steep - +$50</option>
+            </select>
+          </label>
           <fieldset>
             <legend>Add services</legend>
             <label class="checkbox-row">
@@ -270,6 +279,6 @@
       <a href="#top">Back to top</a>
     </footer>
 
-    <script src="app.js?v=20260528-lawn-calculator"></script>
+    <script src="app.js?v=20260528-access-calculator"></script>
   </body>
 </html>
