@@ -9,8 +9,7 @@ const lawnSize = document.querySelector("#lawnSize");
 const frequency = document.querySelector("#frequency");
 const quoteTotal = document.querySelector("#quoteTotal");
 const quoteSummary = document.querySelector("#quoteSummary");
-const paymentType = document.querySelector("#paymentType");
-const payButton = document.querySelector("#payButton");
+const bookingNotes = document.querySelector("#bookingNotes");
 
 function updateQuote() {
   const base = Number(lawnSize.value);
@@ -24,7 +23,7 @@ function updateQuote() {
   quoteTotal.textContent = money.format(total);
   quoteSummary.textContent = `${lawnSize.options[lawnSize.selectedIndex].text.split(" - ")[0]}, ${frequencyText}${
     selectedExtras ? `, plus ${selectedExtras}` : ""
-  }`;
+  } - estimate only`;
 }
 
 quoteForm.addEventListener("input", updateQuote);
@@ -33,11 +32,10 @@ updateQuote();
 document.querySelectorAll(".select-plan").forEach((button) => {
   button.addEventListener("click", () => {
     const plan = button.dataset.plan;
-    const price = button.dataset.price;
-    paymentType.value = price;
-    updatePayButton();
-    document.querySelector("#payment").scrollIntoView({ behavior: "smooth" });
-    document.querySelector("#paymentStatus").textContent = `${plan} selected. Complete the payment details when the live gateway is connected.`;
+    const price = money.format(Number(button.dataset.price));
+    bookingNotes.value = `${plan} selected (${price} estimate). Exact price confirmed after looking at the property.`;
+    document.querySelector("#booking").scrollIntoView({ behavior: "smooth" });
+    document.querySelector("#bookingStatus").textContent = `${plan} selected. Choose a date and send your booking details.`;
   });
 });
 
@@ -121,18 +119,5 @@ document.querySelector("#bookingForm").addEventListener("submit", (event) => {
     return;
   }
 
-  status.textContent = `Booking saved for ${selectedDate.value} at ${selectedTime.value}. Connect this form to email or a database for live bookings.`;
-});
-
-function updatePayButton() {
-  payButton.textContent = `Pay ${money.format(Number(paymentType.value))} securely`;
-}
-
-paymentType.addEventListener("change", updatePayButton);
-updatePayButton();
-
-document.querySelector("#paymentForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  document.querySelector("#paymentStatus").textContent =
-    "Payment form submitted in demo mode. Add Stripe, Windcave, or PayPal credentials to process real payments.";
+  status.textContent = `Booking saved for ${selectedDate.value} at ${selectedTime.value}. Price shown is an estimate only. Exact price is confirmed after looking at the property.`;
 });

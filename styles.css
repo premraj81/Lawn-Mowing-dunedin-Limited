@@ -229,8 +229,7 @@ h3 {
 .service-band,
 .plans-band,
 .quote-layout,
-.booking-layout,
-.payment-layout {
+.booking-layout {
   padding: clamp(58px, 8vw, 104px) clamp(16px, 5vw, 72px);
 }
 
@@ -250,8 +249,7 @@ h3 {
 .plan-card,
 .quote-tool,
 .booking-panel,
-.booking-form,
-.payment-card {
+.booking-form {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
@@ -263,12 +261,27 @@ h3 {
   padding: 24px;
 }
 
+.service-card {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 14px;
+  min-height: 220px;
+}
+
+.service-card-head {
+  display: grid;
+  grid-template-columns: 66px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  min-height: 52px;
+}
+
 .service-icon {
   display: inline-grid;
   place-items: center;
-  min-width: 48px;
-  height: 32px;
-  margin-bottom: 18px;
+  width: 66px;
+  height: 42px;
+  margin: 0;
   padding: 0 10px;
   border-radius: 8px;
   color: var(--green-deep);
@@ -277,28 +290,41 @@ h3 {
   font-weight: 800;
 }
 
+.service-card h3 {
+  margin: 0;
+  font-size: 1.12rem;
+}
+
+.service-card p {
+  margin: 0;
+}
+
 .service-card p,
 .plan-card p,
-.quote-copy p,
-.payment-layout p {
+.quote-copy p {
   color: var(--muted);
 }
 
 .service-card strong {
   color: var(--green-deep);
+  display: flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--soft);
+  line-height: 1.25;
 }
 
 .quote-layout,
-.booking-layout,
-.payment-layout {
+.booking-layout {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(340px, 1.1fr);
   gap: clamp(24px, 5vw, 64px);
   align-items: start;
 }
 
-.quote-layout,
-.payment-layout {
+.quote-layout {
   background: var(--soft);
 }
 
@@ -308,8 +334,7 @@ h3 {
 }
 
 .quote-tool,
-.booking-form,
-.payment-card {
+.booking-form {
   padding: 22px;
 }
 
@@ -374,6 +399,13 @@ textarea:focus {
 
 .quote-total small {
   color: rgba(255, 255, 255, 0.76);
+}
+
+.quote-total em {
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.88rem;
+  font-style: normal;
+  font-weight: 800;
 }
 
 .plans-band {
@@ -536,8 +568,7 @@ textarea:focus {
   .service-grid,
   .plan-grid,
   .quote-layout,
-  .booking-layout,
-  .payment-layout {
+  .booking-layout {
     grid-template-columns: 1fr;
   }
 
@@ -566,6 +597,19 @@ textarea:focus {
 
   .calendar-day {
     font-size: 0.86rem;
+  }
+
+  .service-card {
+    min-height: auto;
+  }
+
+  .service-card-head {
+    grid-template-columns: 58px minmax(0, 1fr);
+  }
+
+  .service-icon {
+    width: 58px;
+    font-size: 0.72rem;
   }
 
   .split-fields {
