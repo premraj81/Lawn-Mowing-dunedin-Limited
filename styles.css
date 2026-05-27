@@ -347,6 +347,34 @@ legend {
   font-weight: 800;
 }
 
+.lawn-size-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 54px;
+  align-items: stretch;
+}
+
+.lawn-size-row input {
+  border-radius: 8px 0 0 8px;
+}
+
+.unit-suffix {
+  display: grid;
+  place-items: center;
+  border: 1px solid #cbd8c5;
+  border-left: 0;
+  border-radius: 0 8px 8px 0;
+  color: var(--green-deep);
+  background: var(--soft);
+  font-weight: 800;
+}
+
+.field-help {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 fieldset {
   display: grid;
   gap: 10px;

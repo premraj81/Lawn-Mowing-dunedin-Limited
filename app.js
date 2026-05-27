@@ -5,14 +5,33 @@ const money = new Intl.NumberFormat("en-NZ", {
 });
 
 const quoteForm = document.querySelector("#quoteForm");
-const lawnSize = document.querySelector("#lawnSize");
+const lawnArea = document.querySelector("#lawnArea");
 const frequency = document.querySelector("#frequency");
 const quoteTotal = document.querySelector("#quoteTotal");
 const quoteSummary = document.querySelector("#quoteSummary");
 const bookingNotes = document.querySelector("#bookingNotes");
 
+function getLawnEstimate(area) {
+  if (area <= 40) {
+    return { price: 40, label: "small lawn" };
+  }
+
+  if (area <= 80) {
+    return { price: 60, label: "medium lawn" };
+  }
+
+  if (area <= 120) {
+    return { price: 80, label: "large lawn" };
+  }
+
+  const extraBlocks = Math.ceil((area - 120) / 20);
+  return { price: 120 + extraBlocks * 20, label: "extra large lawn" };
+}
+
 function updateQuote() {
-  const base = Number(lawnSize.value);
+  const area = Math.max(1, Number(lawnArea.value) || 1);
+  const lawnEstimate = getLawnEstimate(area);
+  const base = lawnEstimate.price;
   const extras = [...quoteForm.querySelectorAll("input[type='checkbox']:checked")];
   const extrasTotal = extras.reduce((sum, item) => sum + Number(item.value), 0);
   const multiplier = Number(frequency.value);
@@ -21,7 +40,7 @@ function updateQuote() {
   const frequencyText = frequency.options[frequency.selectedIndex].text.replace(/ - .*/, "");
 
   quoteTotal.textContent = money.format(total);
-  quoteSummary.textContent = `${lawnSize.options[lawnSize.selectedIndex].text.split(" - ")[0]}, ${frequencyText}${
+  quoteSummary.textContent = `${area} m2 ${lawnEstimate.label}, ${frequencyText}${
     selectedExtras ? `, plus ${selectedExtras}` : ""
   } - estimate only`;
 }
