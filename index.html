@@ -124,6 +124,7 @@
           </p>
           <ul class="check-list">
             <li>No hidden call-out fee inside Dunedin city.</li>
+            <li>If you do not know the lawn size, use our lawn size estimator below.</li>
             <li>Regular customers get cheaper repeat visits.</li>
             <li>Final price depends on property size, access, grass height, waste amount, and job condition.</li>
           </ul>
@@ -188,6 +189,31 @@
             <strong id="quoteTotal">$40</strong>
             <small id="quoteSummary">Small lawn, one-off visit</small>
             <em>Conditions apply. Exact price confirmed after looking at the property.</em>
+          </div>
+          <div class="photo-estimator">
+            <div>
+              <p class="eyebrow">Lawn size estimator</p>
+              <h3>Upload or take a photo, then draw the lawn area.</h3>
+              <p>
+                If you do not know the lawn size, use this estimator. Draw over the area that needs service,
+                then use the rough m2 estimate in the quote calculator.
+              </p>
+            </div>
+            <label class="file-picker">
+              Photo of lawn
+              <input id="lawnPhoto" type="file" accept="image/*" capture="environment" />
+            </label>
+            <div class="canvas-wrap">
+              <canvas id="estimatorCanvas" width="720" height="420" aria-label="Draw the lawn area on the uploaded photo"></canvas>
+              <p id="canvasPlaceholder">Upload or take a lawn photo to start drawing.</p>
+            </div>
+            <div class="estimator-actions">
+              <button type="button" class="button secondary" id="clearDrawing">Clear drawing</button>
+              <button type="button" class="button primary" id="useEstimate">Use estimated m2</button>
+            </div>
+            <p class="form-note" id="estimatorStatus" aria-live="polite">
+              Drawn area estimate will appear here. It is only a rough guide.
+            </p>
           </div>
         </form>
       </section>
@@ -255,8 +281,12 @@
           </label>
           <label>
             Address
-            <input name="address" autocomplete="street-address" placeholder="Dunedin address" />
+            <input id="addressInput" name="address" autocomplete="street-address" placeholder="Dunedin address" />
           </label>
+          <div class="address-actions">
+            <button class="button secondary full" type="button" id="openMaps">Open address in Google Maps</button>
+            <small class="field-help">Type the property address, then open it in Google Maps to check the location.</small>
+          </div>
           <label>
             Notes
             <textarea
@@ -279,6 +309,6 @@
       <a href="#top">Back to top</a>
     </footer>
 
-    <script src="app.js?v=20260528-access-calculator"></script>
+    <script src="app.js?v=20260528-photo-map-estimator"></script>
   </body>
 </html>

@@ -11,6 +11,14 @@ const frequency = document.querySelector("#frequency");
 const quoteTotal = document.querySelector("#quoteTotal");
 const quoteSummary = document.querySelector("#quoteSummary");
 const bookingNotes = document.querySelector("#bookingNotes");
+const addressInput = document.querySelector("#addressInput");
+const openMaps = document.querySelector("#openMaps");
+const lawnPhoto = document.querySelector("#lawnPhoto");
+const estimatorCanvas = document.querySelector("#estimatorCanvas");
+const clearDrawing = document.querySelector("#clearDrawing");
+const useEstimate = document.querySelector("#useEstimate");
+const estimatorStatus = document.querySelector("#estimatorStatus");
+const canvasWrap = document.querySelector(".canvas-wrap");
 
 function getLawnEstimate(area) {
   if (area <= 40) {
@@ -50,6 +58,161 @@ function updateQuote() {
 
 quoteForm.addEventListener("input", updateQuote);
 updateQuote();
+
+openMaps.addEventListener("click", () => {
+  const address = addressInput.value.trim();
+
+  if (!address) {
+    document.querySelector("#bookingStatus").textContent = "Please type the property address first.";
+    addressInput.focus();
+    return;
+  }
+
+  const query = /dunedin/i.test(address) ? address : `${address}, Dunedin, New Zealand`;
+  window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`, "_blank", "noopener");
+});
+
+const estimator = {
+  ctx: estimatorCanvas.getContext("2d"),
+  mask: document.createElement("canvas"),
+  image: null,
+  drawing: false,
+  estimate: 0,
+};
+
+estimator.mask.width = estimatorCanvas.width;
+estimator.mask.height = estimatorCanvas.height;
+estimator.maskCtx = estimator.mask.getContext("2d");
+estimator.maskCtx.lineCap = "round";
+estimator.maskCtx.lineJoin = "round";
+estimator.maskCtx.strokeStyle = "#000";
+estimator.maskCtx.lineWidth = 34;
+estimator.ctx.lineCap = "round";
+estimator.ctx.lineJoin = "round";
+estimator.ctx.strokeStyle = "rgba(29, 123, 69, 0.68)";
+estimator.ctx.lineWidth = 34;
+
+function canvasPoint(event) {
+  const rect = estimatorCanvas.getBoundingClientRect();
+  return {
+    x: ((event.clientX - rect.left) / rect.width) * estimatorCanvas.width,
+    y: ((event.clientY - rect.top) / rect.height) * estimatorCanvas.height,
+  };
+}
+
+function drawPhoto() {
+  estimator.ctx.clearRect(0, 0, estimatorCanvas.width, estimatorCanvas.height);
+
+  if (!estimator.image) {
+    return;
+  }
+
+  const canvasRatio = estimatorCanvas.width / estimatorCanvas.height;
+  const imageRatio = estimator.image.width / estimator.image.height;
+  let drawWidth = estimatorCanvas.width;
+  let drawHeight = estimatorCanvas.height;
+  let x = 0;
+  let y = 0;
+
+  if (imageRatio > canvasRatio) {
+    drawHeight = estimatorCanvas.width / imageRatio;
+    y = (estimatorCanvas.height - drawHeight) / 2;
+  } else {
+    drawWidth = estimatorCanvas.height * imageRatio;
+    x = (estimatorCanvas.width - drawWidth) / 2;
+  }
+
+  estimator.ctx.drawImage(estimator.image, x, y, drawWidth, drawHeight);
+}
+
+function updateEstimatorStatus() {
+  const pixels = estimator.maskCtx.getImageData(0, 0, estimator.mask.width, estimator.mask.height).data;
+  let marked = 0;
+
+  for (let i = 3; i < pixels.length; i += 4) {
+    if (pixels[i] > 0) {
+      marked += 1;
+    }
+  }
+
+  const coverage = marked / (estimator.mask.width * estimator.mask.height);
+  estimator.estimate = Math.max(10, Math.round(coverage * 260));
+  estimatorStatus.textContent = `Rough selected lawn area: about ${estimator.estimate} m2. Use this only as a guide.`;
+}
+
+lawnPhoto.addEventListener("change", () => {
+  const file = lawnPhoto.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  const image = new Image();
+  image.onload = () => {
+    estimator.image = image;
+    estimator.maskCtx.clearRect(0, 0, estimator.mask.width, estimator.mask.height);
+    drawPhoto();
+    canvasWrap.classList.add("has-photo");
+    estimatorStatus.textContent = "Draw over the lawn area that needs service.";
+  };
+  image.src = URL.createObjectURL(file);
+});
+
+estimatorCanvas.addEventListener("pointerdown", (event) => {
+  if (!estimator.image) {
+    estimatorStatus.textContent = "Upload or take a lawn photo first.";
+    return;
+  }
+
+  estimator.drawing = true;
+  estimatorCanvas.setPointerCapture(event.pointerId);
+  const point = canvasPoint(event);
+  estimator.ctx.beginPath();
+  estimator.ctx.moveTo(point.x, point.y);
+  estimator.maskCtx.beginPath();
+  estimator.maskCtx.moveTo(point.x, point.y);
+});
+
+estimatorCanvas.addEventListener("pointermove", (event) => {
+  if (!estimator.drawing) {
+    return;
+  }
+
+  const point = canvasPoint(event);
+  estimator.ctx.lineTo(point.x, point.y);
+  estimator.ctx.stroke();
+  estimator.maskCtx.lineTo(point.x, point.y);
+  estimator.maskCtx.stroke();
+});
+
+estimatorCanvas.addEventListener("pointerup", () => {
+  if (!estimator.drawing) {
+    return;
+  }
+
+  estimator.drawing = false;
+  updateEstimatorStatus();
+});
+
+clearDrawing.addEventListener("click", () => {
+  estimator.maskCtx.clearRect(0, 0, estimator.mask.width, estimator.mask.height);
+  drawPhoto();
+  estimator.estimate = 0;
+  estimatorStatus.textContent = estimator.image
+    ? "Drawing cleared. Draw over the lawn area again."
+    : "Upload or take a lawn photo to start drawing.";
+});
+
+useEstimate.addEventListener("click", () => {
+  if (!estimator.estimate) {
+    estimatorStatus.textContent = "Draw over the lawn area first, then use the estimate.";
+    return;
+  }
+
+  lawnArea.value = estimator.estimate;
+  updateQuote();
+  estimatorStatus.textContent = `Using about ${estimator.estimate} m2 in the quote calculator.`;
+});
 
 document.querySelectorAll(".select-plan").forEach((button) => {
   button.addEventListener("click", () => {
