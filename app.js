@@ -16,6 +16,9 @@ const showMap = document.querySelector("#showMap");
 const openMaps = document.querySelector("#openMaps");
 const mapPreview = document.querySelector("#mapPreview");
 const mapFrame = document.querySelector("#mapFrame");
+const mapDrawCanvas = document.querySelector("#mapDrawCanvas");
+const clearMapDrawing = document.querySelector("#clearMapDrawing");
+const applyMapEstimate = document.querySelector("#applyMapEstimate");
 const mapStatus = document.querySelector("#mapStatus");
 const lawnPhoto = document.querySelector("#lawnPhoto");
 const estimatorCanvas = document.querySelector("#estimatorCanvas");
@@ -66,6 +69,48 @@ function updateQuote() {
 quoteForm.addEventListener("input", updateQuote);
 updateQuote();
 
+const mapDraw = {
+  ctx: mapDrawCanvas.getContext("2d"),
+  mask: document.createElement("canvas"),
+  drawing: false,
+  estimate: 0,
+};
+
+mapDraw.mask.width = mapDrawCanvas.width;
+mapDraw.mask.height = mapDrawCanvas.height;
+mapDraw.maskCtx = mapDraw.mask.getContext("2d");
+mapDraw.maskCtx.lineCap = "round";
+mapDraw.maskCtx.lineJoin = "round";
+mapDraw.maskCtx.strokeStyle = "#000";
+mapDraw.maskCtx.lineWidth = 32;
+mapDraw.ctx.lineCap = "round";
+mapDraw.ctx.lineJoin = "round";
+mapDraw.ctx.strokeStyle = "rgba(217, 240, 120, 0.42)";
+mapDraw.ctx.lineWidth = 32;
+
+function mapPoint(event) {
+  const rect = mapDrawCanvas.getBoundingClientRect();
+  return {
+    x: ((event.clientX - rect.left) / rect.width) * mapDrawCanvas.width,
+    y: ((event.clientY - rect.top) / rect.height) * mapDrawCanvas.height,
+  };
+}
+
+function updateMapEstimate() {
+  const pixels = mapDraw.maskCtx.getImageData(0, 0, mapDraw.mask.width, mapDraw.mask.height).data;
+  let marked = 0;
+
+  for (let i = 3; i < pixels.length; i += 4) {
+    if (pixels[i] > 0) {
+      marked += 1;
+    }
+  }
+
+  const coverage = marked / (mapDraw.mask.width * mapDraw.mask.height);
+  mapDraw.estimate = Math.max(10, Math.round(coverage * 320));
+  mapStatus.textContent = `Rough Google Maps boundary estimate: about ${mapDraw.estimate} m2. This is only a guide.`;
+}
+
 function propertyMapQuery() {
   const address = addressInput.value.trim();
 
@@ -87,8 +132,11 @@ showMap.addEventListener("click", () => {
 
   mapFrame.src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=20&t=k&output=embed`;
   mapPreview.classList.add("has-map");
+  mapDraw.ctx.clearRect(0, 0, mapDrawCanvas.width, mapDrawCanvas.height);
+  mapDraw.maskCtx.clearRect(0, 0, mapDraw.mask.width, mapDraw.mask.height);
+  mapDraw.estimate = 0;
   mapStatus.textContent =
-    "Close Google Maps view loaded. Screenshot this map or take a property photo, then upload it in the lawn size estimator and draw the mowing boundaries.";
+    "Close Google Maps view loaded. Draw over the lawn boundary on the map, then apply the rough estimate to the quote.";
 });
 
 openMaps.addEventListener("click", () => {
@@ -99,6 +147,63 @@ openMaps.addEventListener("click", () => {
   }
 
   window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`, "_blank", "noopener");
+});
+
+mapDrawCanvas.addEventListener("pointerdown", (event) => {
+  if (!mapPreview.classList.contains("has-map")) {
+    mapStatus.textContent = "Show the close property map first, then draw the lawn boundary.";
+    return;
+  }
+
+  mapDraw.drawing = true;
+  mapDrawCanvas.setPointerCapture(event.pointerId);
+  const point = mapPoint(event);
+  mapDraw.ctx.beginPath();
+  mapDraw.ctx.moveTo(point.x, point.y);
+  mapDraw.maskCtx.beginPath();
+  mapDraw.maskCtx.moveTo(point.x, point.y);
+});
+
+mapDrawCanvas.addEventListener("pointermove", (event) => {
+  if (!mapDraw.drawing) {
+    return;
+  }
+
+  const point = mapPoint(event);
+  mapDraw.ctx.lineTo(point.x, point.y);
+  mapDraw.ctx.stroke();
+  mapDraw.maskCtx.lineTo(point.x, point.y);
+  mapDraw.maskCtx.stroke();
+});
+
+mapDrawCanvas.addEventListener("pointerup", () => {
+  if (!mapDraw.drawing) {
+    return;
+  }
+
+  mapDraw.drawing = false;
+  updateMapEstimate();
+});
+
+clearMapDrawing.addEventListener("click", () => {
+  mapDraw.ctx.clearRect(0, 0, mapDrawCanvas.width, mapDrawCanvas.height);
+  mapDraw.maskCtx.clearRect(0, 0, mapDraw.mask.width, mapDraw.mask.height);
+  mapDraw.estimate = 0;
+  mapStatus.textContent = "Map drawing cleared. Draw the lawn boundary again.";
+});
+
+applyMapEstimate.addEventListener("click", () => {
+  const query = addressInput.value.trim();
+
+  if (!mapDraw.estimate) {
+    mapStatus.textContent = "Draw the lawn boundary on the map first, then apply the estimate.";
+    return;
+  }
+
+  lawnArea.value = mapDraw.estimate;
+  updateQuote();
+  bookingNotes.value = `Google Maps drawn boundary estimate: about ${mapDraw.estimate} m2 for ${query || "the property"}. Exact price confirmed after looking at the property.`;
+  mapStatus.textContent = `Using about ${mapDraw.estimate} m2 from the Google Maps drawing in the quote calculator.`;
 });
 
 const estimator = {

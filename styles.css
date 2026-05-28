@@ -538,7 +538,20 @@ textarea:focus {
   border: 0;
 }
 
+.map-preview canvas {
+  position: absolute;
+  inset: 0;
+  display: none;
+  width: 100%;
+  height: 360px;
+  touch-action: none;
+}
+
 .map-preview.has-map iframe {
+  display: block;
+}
+
+.map-preview.has-map canvas {
   display: block;
 }
 
@@ -556,6 +569,13 @@ textarea:focus {
 
 .map-preview.has-map p {
   display: none;
+}
+
+.map-draw-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
 }
 
 .section-total {

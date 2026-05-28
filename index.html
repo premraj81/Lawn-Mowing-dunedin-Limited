@@ -292,7 +292,7 @@
           <div class="address-actions">
             <button class="button primary full" type="button" id="showMap">Show close property map</button>
             <button class="button secondary full" type="button" id="openMaps">Open address in Google Maps</button>
-            <small class="field-help">Type the property address, then zoom to the property. Screenshot the map or take a photo and upload it to the lawn size estimator to draw boundaries.</small>
+            <small class="field-help">Type the property address, show the close map, then draw the mowing boundary over the map for a rough land estimate.</small>
           </div>
           <div class="map-preview" id="mapPreview">
             <iframe
@@ -301,7 +301,12 @@
               loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"
             ></iframe>
+            <canvas id="mapDrawCanvas" width="720" height="360" aria-label="Draw the lawn boundary on the Google Maps preview"></canvas>
             <p id="mapPlaceholder">Enter an address and show the close property map.</p>
+          </div>
+          <div class="map-draw-actions">
+            <button class="button secondary full" type="button" id="clearMapDrawing">Clear map drawing</button>
+            <button class="button primary full" type="button" id="applyMapEstimate">Apply map estimate to quote</button>
           </div>
           <p class="form-note" id="mapStatus" aria-live="polite"></p>
           <label>
@@ -326,6 +331,6 @@
       <a href="#top">Back to top</a>
     </footer>
 
-    <script src="app.js?v=20260528-google-map-preview"></script>
+    <script src="app.js?v=20260528-google-map-drawing"></script>
   </body>
 </html>
