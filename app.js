@@ -11,6 +11,8 @@ const frequency = document.querySelector("#frequency");
 const quoteTotal = document.querySelector("#quoteTotal");
 const quoteSummary = document.querySelector("#quoteSummary");
 const bookingNotes = document.querySelector("#bookingNotes");
+const bookingEstimateTotal = document.querySelector("#bookingEstimateTotal");
+const bookingEstimateSummary = document.querySelector("#bookingEstimateSummary");
 const addressInput = document.querySelector("#addressInput");
 const showMap = document.querySelector("#showMap");
 const openMaps = document.querySelector("#openMaps");
@@ -29,6 +31,7 @@ const estimatorStatus = document.querySelector("#estimatorStatus");
 const canvasWrap = document.querySelector(".canvas-wrap");
 const sectionTotal = document.querySelector("#sectionTotal");
 const sectionList = document.querySelector("#sectionList");
+const bookingStorageKey = "lawnMowingDunedinBookings";
 
 function getLawnEstimate(area) {
   if (area <= 40) {
@@ -64,6 +67,8 @@ function updateQuote() {
   quoteSummary.textContent = `${area} m2 ${lawnEstimate.label}, ${accessText}, ${frequencyText}${
     selectedExtras ? `, plus ${selectedExtras}` : ""
   } - estimate only`;
+  bookingEstimateTotal.textContent = quoteTotal.textContent;
+  bookingEstimateSummary.textContent = quoteSummary.textContent;
 }
 
 quoteForm.addEventListener("input", updateQuote);
@@ -204,6 +209,7 @@ applyMapEstimate.addEventListener("click", () => {
   updateQuote();
   bookingNotes.value = `Google Maps drawn boundary estimate: about ${mapDraw.estimate} m2 for ${query || "the property"}. Exact price confirmed after looking at the property.`;
   mapStatus.textContent = `Using about ${mapDraw.estimate} m2 from the Google Maps drawing in the quote calculator.`;
+  document.querySelector("#booking").scrollIntoView({ behavior: "smooth" });
 });
 
 const estimator = {
@@ -405,7 +411,6 @@ document.querySelectorAll(".select-plan").forEach((button) => {
 const calendarGrid = document.querySelector("#calendarGrid");
 const calendarTitle = document.querySelector("#calendarTitle");
 const selectedDate = document.querySelector("#selectedDate");
-const selectedTime = document.querySelector("#selectedTime");
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 let visibleMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -472,9 +477,31 @@ document.querySelector("#nextMonth").addEventListener("click", () => {
 
 renderCalendar();
 
+function storedBookings() {
+  return JSON.parse(localStorage.getItem(bookingStorageKey) || "[]");
+}
+
+function saveBookings(bookings) {
+  localStorage.setItem(bookingStorageKey, JSON.stringify(bookings));
+}
+
+function quoteSnapshot() {
+  const services = [...quoteForm.querySelectorAll("input[type='checkbox']:checked")].map((item) => item.dataset.label);
+
+  return {
+    total: quoteTotal.textContent,
+    summary: quoteSummary.textContent,
+    lawnArea: lawnArea.value,
+    access: accessLevel.options[accessLevel.selectedIndex].text,
+    frequency: frequency.options[frequency.selectedIndex].text,
+    services,
+  };
+}
+
 document.querySelector("#bookingForm").addEventListener("submit", (event) => {
   event.preventDefault();
   const status = document.querySelector("#bookingStatus");
+  const form = event.currentTarget;
 
   if (!selectedDate.value) {
     status.textContent = "Please choose a booking date first.";
@@ -482,5 +509,28 @@ document.querySelector("#bookingForm").addEventListener("submit", (event) => {
     return;
   }
 
-  status.textContent = `Booking saved for ${selectedDate.value} at ${selectedTime.value}. Price shown is an estimate only. Exact price is confirmed after looking at the property.`;
+  const bookings = storedBookings();
+  const existingForDate = bookings.filter((booking) => booking.date === selectedDate.value);
+  const waitlisted = existingForDate.length >= 2;
+  const booking = {
+    id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}`,
+    date: selectedDate.value,
+    name: form.customerName.value.trim(),
+    address: addressInput.value.trim(),
+    notes: bookingNotes.value.trim(),
+    quote: quoteSnapshot(),
+    waitlisted,
+    createdAt: new Date().toISOString(),
+  };
+
+  bookings.push(booking);
+  saveBookings(bookings);
+
+  if (waitlisted) {
+    status.textContent =
+      "Booking enquiry saved. We already have more than two enquiries for this date, so we will let you know once we confirm availability.";
+    return;
+  }
+
+  status.textContent = `Booking enquiry saved for ${selectedDate.value}. We received the estimate details and will confirm the exact price after checking the property.`;
 });

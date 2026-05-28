@@ -445,6 +445,25 @@ textarea:focus {
   background: var(--green-deep);
 }
 
+.booking-summary {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 14px;
+  border-radius: 8px;
+  color: #fff;
+  background: var(--green-deep);
+}
+
+.booking-summary strong {
+  font-size: 1.6rem;
+}
+
+.booking-summary small {
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.35;
+}
+
 .quote-total strong {
   font-size: 2.4rem;
 }

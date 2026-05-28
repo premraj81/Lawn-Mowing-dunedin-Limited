@@ -272,16 +272,6 @@
             <input id="selectedDate" name="selectedDate" readonly placeholder="Choose a date from the calendar" />
           </label>
           <label>
-            Time
-            <select id="selectedTime" name="selectedTime">
-              <option>8:00 AM</option>
-              <option>10:00 AM</option>
-              <option>12:30 PM</option>
-              <option>2:30 PM</option>
-              <option>4:30 PM</option>
-            </select>
-          </label>
-          <label>
             Name
             <input name="customerName" autocomplete="name" placeholder="Your name" />
           </label>
@@ -309,6 +299,11 @@
             <button class="button primary full" type="button" id="applyMapEstimate">Apply map estimate to quote</button>
           </div>
           <p class="form-note" id="mapStatus" aria-live="polite"></p>
+          <div class="booking-summary">
+            <span>Booking estimate details</span>
+            <strong id="bookingEstimateTotal">$40</strong>
+            <small id="bookingEstimateSummary">40 m2 small lawn, flat access, One-off visit - estimate only</small>
+          </div>
           <label>
             Notes
             <textarea
@@ -318,7 +313,7 @@
               placeholder="Gate access, lawn condition, grass height, waste amount, pets, extras..."
             ></textarea>
           </label>
-          <button class="button primary full" type="submit">Save booking details</button>
+          <button class="button primary full" type="submit">Apply for a quote</button>
           <p class="form-note" id="bookingStatus" aria-live="polite"></p>
         </form>
       </section>
@@ -331,6 +326,6 @@
       <a href="#top">Back to top</a>
     </footer>
 
-    <script src="app.js?v=20260528-google-map-drawing"></script>
+    <script src="app.js?v=20260528-date-booking-storage"></script>
   </body>
 </html>
